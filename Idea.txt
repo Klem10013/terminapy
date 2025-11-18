@@ -1,0 +1,15 @@
+Function to do smth on the text if match a regex (can be use for color display)
+
+The lib can have a function to launch the screen in it's own thread so you do not need to care about where you display, you need to just happend it 
+
+Choos how the screen split
+╭──┬──╮
+│  │  │
+╰──┴──╯ 
+or 
+╭──╮╭──╮
+│  ││  │
+╰──╯╰──╯ 
+
+
+and choose the type of border ex : rounded , square , double etc .. 

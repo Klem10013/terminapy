@@ -19,7 +19,7 @@ cr = "┤" #Cross right
 ct = "┬" #Cross top
 cb = "┴" #Cross bottom
 
-class screen:
+class Screen:
     def __init__(self,size=None,name:str="",ratio : tuple[float,float] = (1,1)):
         if name != "":
             name = f"[ {name} ]"
@@ -27,17 +27,18 @@ class screen:
         self.ratio = ratio
         self.lines : list[str] = []
         self.line_changed = False
-        self.split_screens : tuple[screen,screen,str] = None
+        self.split_screens : tuple[Screen,Screen,str] = None
         self.size_old = None
         self.size = size
+        self.join_char = ""
         if self.size != None:
             self.change_size(size)
 
     def split_horizontally(self,ratio : float):
-        self.split_screens = screen(self.size,"",(1,ratio)),screen(self.size,"",(1,1-ratio)),"h"
+        self.split_screens = Screen(self.size,"",(1,ratio)),Screen(self.size,"",(1,1-ratio)),"h"
 
-    def split_vertical(self,ratio : float):
-        self.split_screens = screen(self.size,"",(ratio,1)),screen(self.size,"",(1-ratio,1)),"v"
+    def split_vertically(self,ratio : float):
+        self.split_screens = Screen(self.size,"",(ratio,1)),Screen(self.size,"",(1-ratio,1)),"v"
     
     def change_size(self,size,cut=None,sp=""):
         rc = round_down(size.columns*self.ratio[0])
@@ -53,8 +54,14 @@ class screen:
             self.split_screens[1].change_size(self.size,res1,self.split_screens[2])
         return (rc,rl)
 
-    def change_lines(self,lines : list[str]):
-        self.lines = lines
+    def change_lines(self,lines : list[str],copy: bool = True):
+        self.line_changed = True
+        self.lines.clear()
+        if copy:
+            self.lines = lines.copy()
+        else:
+            self.lines = lines
+    
     
     def append(self,message:str):
         self.line_changed = True
@@ -64,7 +71,7 @@ class screen:
         self.line_changed = True
         self.lines.clear()
 
-    def rewwrite_last_line(self,message:str):
+    def rewrite_last_line(self,message:str):
         self.line_changed = True
         if len(self.lines) == 0:
             self.lines.append(message)
@@ -97,7 +104,7 @@ class screen:
             if to_list:
                 return screen
             else:
-                return "\n".join(screen)
+                return self.join_char.join(screen)
 
         screen1 = self.split_screens[0]
         screen2 = self.split_screens[1]
@@ -139,9 +146,7 @@ class screen:
         if to_list:
             return screen
 
-        if len(screen) != self.size.lines - 1:
-            screen = ["\n"] + screen
-        return "\n".join(screen)
+        return self.join_char.join(screen)
 
     def need_refresh(self,main_fraim:bool = False) -> bool:
         size = os.get_terminal_size()
@@ -155,7 +160,7 @@ class screen:
         return False if self.split_screens is None else (self.get_screen(1).need_refresh() or self.get_screen(0).need_refresh())
 
 
-    def draw_terminal_screen(self):
+    def draw_screen_on_terminal(self):
         if self.need_refresh(True):
-            os.sys.stdout.write("\n"+self.get_terminal_screen())
+            os.sys.stdout.write("\r"+self.get_terminal_screen())
             os.sys.stdout.flush()

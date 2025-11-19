@@ -1,90 +1,120 @@
+
 # Terminapy
 
-Terminapy is a library use for display a basic ascii / Unicode screen on the terminal
+**Terminapy** is a lightweight Python library for creating a simple
+ASCII/Unicode-based terminal "screen" with sub-screens. It allows you to
+divide the terminal into multiple panels, each managed independently,
+and safely share screens between threads.
 
-## What is this Lib
-This lib is a Class "**screen**" that help you do display screen on the terminal like:
-```plaintext
-╭───────────────────────┬───────────────────────╮
-│                       │                       │
-│                       │                       │
-│                       │                       │
-│                       │                       │
-│                       │                       │
-│                       │                       │
-│                       │                       │
-│                       │                       │
-│ Display Text          │ Display Text 2        │
-╰───────────────────────┴───────────────────────╯
-```
+## What Is It For?
 
-It is base on the princip of sub screen.
+Terminapy provides a `Screen` class that help you create and manage str that can be display on your terminal like so:
 
->To ilustrate what is a sub screen you can take as example the previous example.
+    ╭───────────────────────┬───────────────────────╮
+    │                       │                       │
+    │                       │                       │
+    │      Sub-Screen 1     │     Sub-Screen 2      │
+    │   (displaying text)   │  (displaying text 2)  │
+    │                       │                       │
+    │                       │                       │
+    ╰───────────────────────┴───────────────────────╯
+
+>This lib only work in the main loop of the programme you can see how to use it in the example
+>it does not need it's own runtime
 >
->This screen is divided in two :
->- Main Screen:
->   -    Sub Screen 1 (Text: "Display text")
->   -   Sub Screen 2 (Text: "Display text2")
->
-> The lib is purly base on this principe so every Sub Screen can have it's on sub screen etc ...
+>the lib provide function to print directly the screen on the terminal but you can get the display and display it on you own there will be some example 
 
-Each sub screen will have it's own management of the display of the text so with further improvement on the lib each sub screen can be entirely customize withoud affecting the other screen around
+### External Lib use:
+> In this lib i will try to use as little as possible external lib
+-   os
+-   math
 
-It's objectif is to have a easy and yet powerfull screen that can be share between thread
 
->And an other objectif is to use as little external lib as possible 
->#### Lib use now:
->- os
->
+## Installation
 
-## How to use it 
+    pip install terminapy
 
-First you need to create a screen
+## Usage Examples
 
-Once you have a screen you can split it in multiple sub screen
+### Simple loop
 
-After that the Main is basicly use only to refresh the sub screen and every sub screen split are going to be "useless" for the user
-
->> Two diffent sub screen can be pass to two Thread\
->> Be CAREFULL one sub screen should not be pass to two different Thread this can cause unexpeted behavior
-
-## Function
-
->> screen(name : str) // Main Class
-
-Every function are from screen.
->> This function split the screen in sub screen ratio is the proportion that the first screen will take on the mother screen
->> split_horizontally(ratio : float)\
->> split_vertical(ratio : float)
-
->> append(message : str) // append a message to the bottom of the screen
-
->> clear() // clear the screen
-
->> rewwrite_last_line(message) // replace the last line
- 
->> get_screen(indice: int) //return the subscreen indice = 0 or 1 
-
-## Example
->>This example show how to display the screen on the termial
-```python
+``` python
 import terminapy as tp
 
-if __name__ == "__main__":
-    screen = tp.screen()
-    while True:
-        screen.draw_terminal_screen()
+screen = tp.screen()
+while True:
+    screen.draw_terminal_screen()
 ```
 
->>This example show how to split the screen vertically in the middle
-```python
+### Split vertically
+
+``` python
 import terminapy as tp
 
-if __name__ == "__main__":
-    screen = tp.screen()
-    screen.split_vertical(0.5)
-    while True:
-        screen.draw_terminal_screen()
-
+screen = tp.screen()
+screen.split_vertical(0.5)
+while True:
+    screen.draw_terminal_screen()
 ```
+
+### Updating content
+
+``` python
+import terminapy as tp
+import time
+
+screen = tp.screen()
+screen.split_vertical(0.5)
+left = screen.get_screen(0)
+right = screen.get_screen(1)
+
+left.append("Left panel: Hello!")
+right.append("Right panel: Counter")
+
+counter = 0
+while True:
+    counter += 1
+    right.rewrite_last_line(f"Right panel: {counter}")
+    screen.draw_terminal_screen()
+    time.sleep(1)
+```
+
+### Threading Example
+
+``` python
+import terminapy as tp
+import threading
+import time
+
+def worker(sub):
+    for i in range(20):
+        sub.append(f"Thread says {i}")
+        time.sleep(0.5)
+
+screen = tp.screen()
+screen.split_vertical(0.5)
+left = screen.get_screen(0)
+right = screen.get_screen(1)
+
+t = threading.Thread(target=worker, args=(right,))
+t.start()
+
+for _ in range(40):
+    screen.draw_terminal_screen()
+    time.sleep(0.25)
+t.join()
+```
+
+## API Reference
+
+|  Method | Description |
+| :------ | :---------- |
+|`screen(name: str)`                 | Create a new main screen  |
+|`split_horizontally(ratio: float)`  | Split top/bottom          |
+|`split_vertically(ratio: float)`    | Split left/right          |
+|`change_line(lines:list[str],copy:bool = True)`| Replace all the previous lines by the new line|
+|`append(message: str)`              | Append text to sub-screen |
+|`clear()`                           | Clear a screen            |
+|`rewrite_last_line(message: str)`   | Replace last line         |
+|`get_screen(index: int)`            | Get a sub-screen          |
+|`draw_terminal_screen()`            | Render terminal screen    |

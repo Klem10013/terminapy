@@ -1,1 +1,1 @@
-from .main import screen
+from main import Screen

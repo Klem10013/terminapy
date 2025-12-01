@@ -116,3 +116,4 @@ t.join()
 |`get_screen(index: int)`            | Get a sub-screen          |
 |`get_terminal_screen()`             | Get the str of the screen (what is use in **draw_terminal_screen**)|
 |`draw_terminal_screen()`            | Render terminal screen    |
+|`full_autonome(refresh_rate : float)`| Start a thread and refresh the terminal on it's own you do not need to have a loop do draw the screen on the terminal |

@@ -8,7 +8,7 @@ and safely share screens between threads.
 
 ## What Is It For?
 
-Terminapy provides a `Screen` class that help you create and manage str that can be display on your terminal like so:
+Terminapy provides a `Screen` class that help you create and manage a display of the terminal:
 
     ╭───────────────────────┬───────────────────────╮
     │                       │                       │
@@ -19,10 +19,7 @@ Terminapy provides a `Screen` class that help you create and manage str that can
     │                       │                       │
     ╰───────────────────────┴───────────────────────╯
 
->This lib only work in the main loop of the programme you can see how to use it in the example
->it does not need it's own runtime
->
->the lib provide function to print directly the screen on the terminal but you can get the display and display it on you own there will be some example 
+>the lib provide function to print directly the screen on the terminal but you can get the screen as a str and display it on you own there will be some example 
 
 ### External Lib use:
 > In this lib i will try to use as little as possible external lib
@@ -117,4 +114,5 @@ t.join()
 |`clear()`                           | Clear a screen            |
 |`rewrite_last_line(message: str)`   | Replace last line         |
 |`get_screen(index: int)`            | Get a sub-screen          |
+|`get_terminal_screen()`             | Get the str of the screen (what is use in **draw_terminal_screen**)|
 |`draw_terminal_screen()`            | Render terminal screen    |

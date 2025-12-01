@@ -25,6 +25,8 @@ Terminapy provides a `Screen` class that help you create and manage a display of
 > In this lib i will try to use as little as possible external lib
 -   os
 -   math
+-   time
+-   threading
 
 
 ## Installation

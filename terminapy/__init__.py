@@ -1,1 +1,3 @@
-from main import Screen
+from main import ScreenManager
+from border import *
+

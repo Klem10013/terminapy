@@ -34,8 +34,6 @@ class Screen:
     def full_autonome(self):
         self.launched = True
 
-    
-
     def set_border_style(self,style : border.BorderStyle):
         self.screen_changed = True
         self.border = style
@@ -143,7 +141,6 @@ class Screen:
                 return screen
             else:
                 return self.join_char.join(screen)
-
         screen1 = self.split_screens[0]
         screen2 = self.split_screens[1]
         if self.split_screens[2] == "h":
@@ -186,25 +183,40 @@ class Screen:
 
         return self.join_char.join(screen)
 
-    def need_refresh(self,main_fraim:bool = False) -> bool:
-        size = os.get_terminal_size()
-        if main_fraim and self.size_old != size:
-            self.size_old = size
-            self.change_size(size)
-            return True
-        if self.line_changed or self.screen_changed:
-            self.line_changed = False
-            self.screen_changed = False
-            return True
-        return False if self.split_screens is None else (self.get_screen(1).need_refresh() or self.get_screen(0).need_refresh())
+    def need_refresh(self,size) -> bool:
+        return size != self.size or self.line_changed or self.screen_changed or (self.split_screens is not None and (self.split_screens[0].need_refresh(size) or self.split_screens[1].need_refresh(size)))
 
-    def __draw_screen_on_terminal(self):
-        if self.need_refresh(True):
-            os.sys.stdout.write("\r"+self.get_terminal_screen())
-            os.sys.stdout.flush()
+    def refresh(self,size):
+        self.change_size(size)
+        self.refresh_done()
 
-    def draw_screen_on_terminal(self):
-        if not self.launched:
-            self.__draw_screen_on_terminal()
-        else:
-            raise RuntimeError("Screen is launched in autonome mode, cannot draw manually")
+    def refresh_done(self):
+        self.line_changed = False
+        self.screen_changed = False
+        if self.split_screens is not None:
+            self.split_screens[0].refresh_done()
+            self.split_screens[1].refresh_done()
+
+
+    #def need_refresh(self,main_fraim:bool = False) -> bool:
+    #    size = os.get_terminal_size()
+    #    if main_fraim and self.size_old != size:
+    #        self.size_old = size
+    #        self.change_size(size)
+    #        return True
+    #    if self.line_changed or self.screen_changed:
+    #        self.line_changed = False
+    #        self.screen_changed = False
+    #        return True
+    #    return False if self.split_screens is None else (self.get_screen(1).need_refresh() or self.get_screen(0).need_refresh())
+#
+#    def __draw_screen_on_terminal(self):
+#        if self.need_refresh(True):
+#            os.sys.stdout.write("\r"+self.get_terminal_screen())
+#            os.sys.stdout.flush()
+#
+#    def draw_screen_on_terminal(self):
+#        if not self.launched:
+#            self.__draw_screen_on_terminal()
+#        else:
+#            raise RuntimeError("Screen is launched in autonome mode, cannot draw manually")

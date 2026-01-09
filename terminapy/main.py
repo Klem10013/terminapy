@@ -11,11 +11,11 @@ class ScreenManager:
 
     def add_basic_screen(self):
         basic_screen = screen.Screen()
-        self.screens.append(basic_screen)
-        self.current_screen = len(self.screens)-1
+        self.add_screen(basic_screen)
 
     def add_screen(self,screen_instance: screen.Screen):
         self.screens.append(screen_instance)
+        self.current_screen = len(self.screens)-1
 
     def show_which_screen(self):
         self.show_which_screen = True
@@ -42,7 +42,7 @@ class ScreenManager:
             if screen.need_refresh(self.size):
                 screen.refresh(self.size)
                 screen_draw = screen.get_terminal_screen()
-                os.sys.stdout.write(screen_draw)
+                os.sys.stdout.write("\r"+screen_draw)
                 os.sys.stdout.flush()
         else:
             print("No screen to show",end='\r')

@@ -3,7 +3,7 @@ import os
 import math
 
 #my import 
-import border
+from . import border
 
 
 def round_down(x):
@@ -42,8 +42,9 @@ class Screen:
         if screen_right is None:
             screen_right = self
         if self.split_screens is None:
-            screen1 = screen_left.init_split_screen((1, ratio))
-            screen2 = screen_right.init_split_screen((1, 1 - ratio))
+            self.screen_changed = True
+            screen1 = self.init_split_screen(screen_left,(ratio,1))
+            screen2 = self.init_split_screen(screen_right,(1 - ratio,1))
             self.split_screens = screen1, screen2, "h"
             return screen1,screen2
         else:
@@ -55,15 +56,19 @@ class Screen:
         if screen_right is None:
             screen_right = self
         if self.split_screens is None:
-            screen1 = screen_left.init_split_screen((ratio, 1))
-            screen2 = screen_right.init_split_screen((1 - ratio, 1))
+            self.screen_changed = True
+            screen1 = self.init_split_screen(screen_left,(ratio,1))
+            screen2 = self.init_split_screen(screen_right,(1 - ratio,1))
             self.split_screens = screen1, screen2, "v"
             return screen1,screen2
         else:
             raise RuntimeError("Screen is already split")
 
-    def init_split_screen(self, ratio: tuple[float, float]):
-        return Screen(self.size, "", ratio, self.border)
+    def init_split_screen(self, screen, ratio: tuple[float, float]):
+        screen.size = self.size
+        screen.ratio = ratio
+        screen.border = self.border
+        return screen
 
     def change_size(self, size, cut=None, sp=""):
         if size.columns == 0 or size.lines == 0:

@@ -1,8 +1,6 @@
-from main import ScreenManager
-from screen import Screen
-from screenType.textScreen import TextScreen
-from screenType.graphScreen import GraphScreen, Graph, Bar, Scatter
-from border import *
+from .screenManager import ScreenManager
+from .screen import Screen
+from .border import BorderStyle, ROUNDED_CORNER, SQUARE_CORNER, DOUBLE_LINE_CORNER
 
 #As python is an interpreted language no library will be importer at runtime so if you want tu use this lib but you do not have
 #some dependencies you can still use the other part of the library without problem

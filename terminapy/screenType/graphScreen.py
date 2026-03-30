@@ -1,5 +1,5 @@
-from screen import Screen
-import border
+from ..screen import Screen
+from .. import border
 
 class Graph: 
     def __init__(self):
@@ -90,8 +90,8 @@ class Bar(Graph):
             self.data[name] += value
         else:
             self.data[name] = value
-        if value > self.max_data:
-            self.max_data = value
+        if self.data[name] > self.max_data:
+            self.max_data = self.data[name]
 
     def overwrite_data(self,name:str,value:float):
         self.data[name] = value
@@ -154,9 +154,6 @@ class GraphScreen(Screen):
 
     def refresh_done(self):
         super().refresh_done()
-
-    def init_split_screen(self, ratio):
-        return GraphScreen(self.size,"",ratio,self.border,self.graph)
 
     def add_data(self,*args, **kwargs):
         self.data_changed = True

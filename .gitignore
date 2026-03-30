@@ -1,2 +1,4 @@
 /terminapy/test.py
-/terminapy/__pycache__
+*__pycache__*
+/.idea
+terminapy.egg-info

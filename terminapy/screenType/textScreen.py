@@ -1,5 +1,5 @@
-from screen import Screen
-import border
+from ..screen import Screen
+from .. import border
 
 
 class TextScreen(Screen):
@@ -15,9 +15,6 @@ class TextScreen(Screen):
     def refresh_done(self):
         self.line_changed = False
         super().refresh_done()
-
-    def init_split_screen(self,ratio : tuple[float,float]):
-        return TextScreen(self.size,"",ratio,self.border)
 
     def clear(self):
         self.line_changed = True

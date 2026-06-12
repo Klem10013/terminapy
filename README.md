@@ -2,6 +2,9 @@
 
 **Terminapy** is a lightweight Python library for creating a simple ASCII/Unicode-based terminal "screen" with sub-screens. It allows you to divide the terminal into multiple panels, each managed independently, and safely share screens between threads.
 
+## Demo
+![Demo](assets/demo.gif)
+
 ## What Is It For?
 
 Terminapy provides multiple `Screen` classes that help you create and manage a terminal display:

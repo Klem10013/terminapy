@@ -33,7 +33,8 @@ class TextScreen(Screen):
             self.lines.append(message)
 
     def apply(self,regex:str,replacement:str):
-        self.apply_change.append((regex,replacement))
+        pass
+        #self.apply_change.append((regex,replacement))
     
     def change_lines(self,lines : list[str],copy: bool = True):
         self.line_changed = True

@@ -28,7 +28,7 @@ class Scatter(Graph):
         self.scale = [" ", ".", ",","-","~",":",";","+","=","*","%","@","$","#"]
         self.scale_len = len(self.scale)
         self.max_data : list[float,float] = [1,1]
-        self.data : list[tuple(float,float)] = []
+        self.data : list[tuple[float,float]] = []
 
     def get_data(self):
         return self.data
@@ -149,6 +149,9 @@ class GraphScreen(Screen):
         self.data_changed : bool = False
         super().__init__(size,name,ratio,border_style)
     
+    def set_graph(self,graph : Graph):
+        self.graph = graph
+
     def need_refresh(self,size) -> bool:
         return self.data_changed or super().need_refresh(size)
 

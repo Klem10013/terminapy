@@ -12,7 +12,9 @@ def round_down(x):
         return math.ceil(x)
     return fr
 
-
+"""
+This Class is use as the base for all screen version it can not be use to display anything only the screen border.
+"""
 class Screen:
     def __init__(self, size=None, name: str = "", ratio: tuple[float, float] = (1, 1),
                  border_style: border.BorderStyle = border.SQUARE_CORNER()):
@@ -36,15 +38,15 @@ class Screen:
             self.split_screens[0].set_border_style(style)
             self.split_screens[1].set_border_style(style)
 
-    def split_horizontally(self, ratio: float, screen_left = None, screen_right = None):
-        if screen_left is None:
-            screen_left = self
-        if screen_right is None:
-            screen_right = self
+    def split_horizontally(self, ratio: float, screen_top = None, screen_bottom = None):
+        if screen_top is None:
+            screen_top = self
+        if screen_bottom is None:
+            screen_bottom = self
         if self.split_screens is None:
             self.screen_changed = True
-            screen1 = self.init_split_screen(screen_left,(ratio,1))
-            screen2 = self.init_split_screen(screen_right,(1 - ratio,1))
+            screen1 = self.init_split_screen(screen_top,(ratio,1))
+            screen2 = self.init_split_screen(screen_bottom,(1 - ratio,1))
             self.split_screens = screen1, screen2, "h"
             return screen1,screen2
         else:
@@ -86,13 +88,18 @@ class Screen:
             self.split_screens[1].change_size(self.size, res1, self.split_screens[2])
         return (rc, rl)
 
-    def get_screen(self, indice: int):
-        if 0 <= indice < 2:
-            return self.split_screens[indice]
+    """
+    return the left screen if left is True, else return the right screen. If the screen is not split, return self
+    """
+    def get_screen(self, left: bool = True) -> "Screen":
+        if self.split_screens is None:
+            raise ValueError("Screen is not split")
+        if left:
+            return self.split_screens[0]
         else:
-            raise IndexError
+            return self.split_screens[1]
 
-    def get_terminal_screen(self):
+    def get_string_screen(self):
         return self.create_screen()
 
     def create_screen(self, no_top: bool = False, no_bot: bool = False, no_left: bool = False, no_right: bool = False,

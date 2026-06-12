@@ -5,7 +5,7 @@ with open('README.md', 'r', encoding='utf-8') as f:
 
 setup(
     name='terminapy',
-    version='0.0.3',
+    version='1.0.0',
     packages=find_packages(),
     packages_data={
         "terminapy":["py.typed"],    

@@ -25,6 +25,7 @@ Terminapy provides multiple `Screen` classes that help you create and manage a t
 - os
 - math
 - time
+- sys
 - threading
 
 

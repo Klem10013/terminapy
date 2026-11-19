@@ -45,8 +45,8 @@ class Screen:
             screen_bottom = self
         if self.split_screens is None:
             self.screen_changed = True
-            screen1 = self.init_split_screen(screen_top,(ratio,1))
-            screen2 = self.init_split_screen(screen_bottom,(1 - ratio,1))
+            screen1 = self.init_split_screen(screen_top,(1,ratio))
+            screen2 = self.init_split_screen(screen_bottom,(1, 1 - ratio))
             self.split_screens = screen1, screen2, "h"
             return screen1,screen2
         else:
@@ -125,7 +125,7 @@ class Screen:
                 bottom_screen_str = screen2.create_screen(True, no_bot, no_left, no_right, True)
                 screen += top_screen_str
                 li = (self.border["hr"] if no_left else self.border["cl"])
-                for i in range(1, self.size.columns - 1):
+                for i in range(1, len(top_screen_str[-1]) - 1):
                     if top_screen_str[-1][i] == self.border["vr"] and bottom_screen_str[0][i] == self.border["vr"]:
                         li += self.border["cc"]
                     elif top_screen_str[-1][i] == self.border["vr"] and bottom_screen_str[0][i] != self.border["vr"]:

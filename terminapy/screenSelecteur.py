@@ -9,5 +9,7 @@ def get_screen_type(screen_type : scType):
         return GraphScreen()
     elif screen_type == scType.TEXT:
         return TextScreen()
+    elif screen_type == scType.INPUT:
+        return InputScreen()
     else:
         raise ValueError("Invalid screen type")

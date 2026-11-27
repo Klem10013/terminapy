@@ -158,6 +158,21 @@ Furthermore, this lib includes a class named **ScreenManager**. Its primary use 
 
 ---
 
+### Input
+#### Use
+> This type of screen will read keyboard input and display it, it support only one line input (for now), it can take function when it's created of when you call it for getting the input and if the user give \n or \d to the input box it will apply the function with the input.
+
+#### Functions
+
+| Method | Description |
+| :------ | :---------- |
+| `get_input(self,submit : Callable[[str],None] = None)` | get user input and call submit with the input if \n or \r are given.
+|`clear()` | clear the input |
+| `get_data()` | return the input |
+
+
+---
+
 ## Usage Examples
 
 ### Simple loop
@@ -204,6 +219,47 @@ while True:
     time.sleep(0.1)
 ```
 
+### Simple Chat box
+```python
+# Without custom exit
+import terminapy as tp
+from terminapy.screenType import ScreenTypeEnum as StE
+import time
+
+screen_manager = tp.screenManager.ScreenManager()
+chat,input_box = screen_manager.split_horizontally(ratio = 0.9, top = StE.TEXT, bottom = StE.INPUT)
+screen_manager.full_autonome(0.1)
+
+while True:
+    input_box.get_input(submit=chat.append)
+    time.sleep(0.05)
+
+```
+
+```python
+# With custom exit
+import terminapy as tp
+import terminapy.screenType as screenType
+from terminapy.screenType import *
+import time
+import sys
+
+
+screen = tp.screen.Screen()
+chat = screenType.TextScreen()
+
+input_box = screenType.InputScreen(submit=chat.append, is_cbreak = False, quit=sys.exit)
+screen.split_horizontally(ratio=0.9,screen_top=chat, screen_bottom=input_box)
+
+screen_manager = tp.screenManager.ScreenManager(existing_screen=screen)
+screen_manager.full_autonome(0.1)
+
+while True:
+    input_box.get_input()
+    time.sleep(0.05)
+
+```
+
 ## API Recap
 
 | Method | Description |
@@ -220,3 +276,7 @@ while True:
 | `Text.append(message: str)` | Adds a message to the bottom of the screen |
 | `Text.change_lines(lines: list[str], copy: bool)` | Replaces all the lines of the screen. You can choose whether the list is copied or not |
 | `Text.rewrite_last_line(message: str)` | Replaces the last line |
+
+
+## Note
+> ! Terminapy does not support accent nor emoji

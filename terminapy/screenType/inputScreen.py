@@ -29,7 +29,7 @@ class InputScreen(Screen):
                 clean_on_submit : bool = True,
                 quit : Callable[[],None] = None,
                 is_cbreak : bool = True,
-                timeout : float = 0.0,
+                timeout : float = 0.03,
                 cursor : str = "█",
                 prompt : str = ">",
                 skip_escape_char : bool = True,):
@@ -142,15 +142,15 @@ class InputScreen(Screen):
         return super().refresh_done()
 
     def get_input(self,submit : Callable[[str],None] = None) -> str:
-        self.data_changed = True
         submit = self.submit if submit is None else submit
         for ch in self._read(self.timeout):
             self.handle_key(ch,submit)
+            self.data_changed = True
         return self.data
 
     def force_submit(self):
-        self.data_changed = True
         self.submit(self.data)
+        self.data_changed = True
         if (self.clean_on_submit):
             self.data = ""
 
